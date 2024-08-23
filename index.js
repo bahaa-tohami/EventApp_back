@@ -4,6 +4,8 @@ import initDB from "./config/initDb.js";
 import cors from "cors";
 import dotenv from "dotenv";
 import seedDatabase from "./config/seed.js";
+import userRouter from "./routes/userRoute.js";
+
 dotenv.config();
 
 const app = express();
@@ -21,7 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors())
 // inti db
 initDB();
-seedDatabase();
+app.use("/", userRouter)
 
 // Vérification de la connexion
 
