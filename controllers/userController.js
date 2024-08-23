@@ -49,3 +49,22 @@ export const updateUserProfile = async (req, res) => {
       res.status(500).json({ message: 'Erreur interne du serveur' });
     }
   };
+
+/**
+ * Créer un nouvel utilisateur.
+ * @param {Request} req
+ * @param {Response} res
+ */
+export const createUser = async (req, res) => {
+    try {
+      const userData = req.body;
+  
+      // Créer un nouvel utilisateur avec les données fournies
+      const newUser = await User.create(userData);
+  
+      res.status(201).json({ message: 'Utilisateur créé avec succès', user: newUser });
+    } catch (error) {
+      console.error('Erreur lors de la création de l\'utilisateur:', error);
+      res.status(500).json({ message: 'Erreur interne du serveur' });
+    }
+  };
