@@ -1,5 +1,5 @@
 import express from 'express';
-import { getUserProfile, updateUserProfile } from '../controllers/userController.js';
+import { createUser, getUserProfile, updateUserProfile } from '../controllers/userController.js';
 
 const router = express.Router();
 
@@ -7,4 +7,6 @@ const router = express.Router();
 router.get('/profile/:id', getUserProfile);
 // Route pour mettre à jour le profil d'un utilisateur par son ID
 router.put('/profile/:id', updateUserProfile);
+// Route pour créer un nouvel utilisateur
+router.post('/users', createUser);
 export default router;
