@@ -3,7 +3,8 @@ import dotenv from "dotenv";
 import {User} from "../models/UserModel.js";
 import {Event} from "../models/EventModel.js";
 import {Participant} from "../models/GuestModel.js";
-
+import {Notification} from "../models/NotificationModel.js";
+import {Comment} from "../models/CommentModel.js";
 
 dotenv.config();
 

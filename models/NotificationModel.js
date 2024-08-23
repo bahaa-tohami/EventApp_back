@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize";
 import sequelize from "../config/database.js";
 import { Sequelize } from "sequelize";
 
-const Notification = sequelize.define('Notification', {
+export const Notification = sequelize.define('Notification', {
   notification_id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -43,4 +43,4 @@ const Notification = sequelize.define('Notification', {
   updatedAt: false
 });
 
-module.exports = Notification;
+

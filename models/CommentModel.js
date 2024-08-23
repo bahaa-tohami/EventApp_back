@@ -1,7 +1,8 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/database.js";
+import { Sequelize } from "sequelize";
 
-const Comment = sequelize.define('Comment', {
+export const Comment = sequelize.define('Comment', {
   comment_id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -46,4 +47,4 @@ const Comment = sequelize.define('Comment', {
   updatedAt: 'updated_at'
 });
 
-module.exports = Comment;
+
