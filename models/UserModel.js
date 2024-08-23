@@ -43,7 +43,7 @@ export const User = sequelize.define('User', {
   },
   status: {
     type: DataTypes.ENUM('active', 'inactive'),
-    defaultValue: 'user'
+    defaultValue: 'inactive'
   }
 }, {
   tableName: 'Users',

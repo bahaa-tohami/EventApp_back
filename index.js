@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors())
 // inti db
 initDB();
-//seedDatabase();
+seedDatabase();
 
 // Vérification de la connexion
 
