@@ -208,10 +208,10 @@ async function seedDatabase() {
     await Participant.bulkCreate(participantsData);
     console.log('Données des participants insérées.');
 
-    //await Notification.bulkCreate(notificationsData);
+    await Notification.bulkCreate(notificationsData);
     console.log('Données des notifications insérées.');
 
-    //await Comment.bulkCreate(commentsData);
+    await Comment.bulkCreate(commentsData);
     console.log('Données des commentaires insérées.');
   } catch (error) {
     console.error('Erreur lors de l\'insertion des données :', error);
