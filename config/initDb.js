@@ -29,7 +29,7 @@ async function initDB() {
                 first_name VARCHAR(50),
                 last_name VARCHAR(50),
                 role ENUM('user', 'admin') DEFAULT 'user',
-                status ENUM('user', 'admin') DEFAULT 'user'
+                status ENUM('active', 'inactive') DEFAULT 'active'
             );
         `);
  
