@@ -1,10 +1,14 @@
 import express from "express";
-
+import sequelize from "./config/database.js";
+import initDB from "./config/initDb.js";
 import cors from "cors";
+import dotenv from "dotenv";
+import seedDatabase from "./config/seed.js";
+dotenv.config();
 
 const app = express();
 
-const port = 9000;
+const port = process.env.PORT;
 
 const BASE_URL = "http://localhost:9000";
 
@@ -15,6 +19,12 @@ app.use(express.urlencoded({ extended: true }));
 /* app.use(express.static("public")); */
 
 app.use(cors())
+// inti db
+initDB();
+//seedDatabase();
+
+// Vérification de la connexion
+
 
 app.listen(port, () => {
 
