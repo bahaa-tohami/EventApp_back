@@ -1,5 +1,5 @@
 import express from 'express';
-import { createUser, getUserProfile, updateUserProfile } from '../controllers/userController.js';
+import { addComment, createUser, getUserProfile, updateUserProfile } from '../controllers/userController.js';
 
 const router = express.Router();
 
@@ -9,4 +9,6 @@ router.get('/profile/:id', getUserProfile);
 router.put('/profile/:id', updateUserProfile);
 // Route pour créer un nouvel utilisateur
 router.post('/users', createUser);
+// Route pour ajouter un commentaire à un événement
+router.post('/comments', addComment);
 export default router;

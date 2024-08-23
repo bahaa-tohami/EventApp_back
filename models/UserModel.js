@@ -1,8 +1,6 @@
-import { DataTypes } from "sequelize";
 import sequelize from "../config/database.js";
-import { Sequelize } from "sequelize";
-
-
+import { DataTypes } from "sequelize";
+import { Comment } from './CommentModel.js'; // Importer le modèle Comment
 
 export const User = sequelize.define('User', {
   user_id: {
@@ -10,40 +8,22 @@ export const User = sequelize.define('User', {
     autoIncrement: true,
     primaryKey: true
   },
-  created_at: {
-    type: DataTypes.DATE,
-    defaultValue: Sequelize.NOW
-  },
-  updated_at: {
-    type: DataTypes.DATE,
-    defaultValue: Sequelize.NOW
-  },
   username: {
-    type: DataTypes.STRING(50),
-    allowNull: false
-  },
-  email: {
-    type: DataTypes.STRING(100),
+    type: DataTypes.STRING,
     allowNull: false,
     unique: true
   },
-  password_hash: {
-    type: DataTypes.STRING(255),
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+    validate: {
+      isEmail: true
+    }
+  },
+  password: {
+    type: DataTypes.STRING,
     allowNull: false
-  },
-  first_name: {
-    type: DataTypes.STRING(50),
-  },
-  last_name: {
-    type: DataTypes.STRING(50),
-  },
-  role: {
-    type: DataTypes.ENUM('user', 'admin'),
-    defaultValue: 'user'
-  },
-  status: {
-    type: DataTypes.ENUM('active', 'inactive'),
-    defaultValue: 'inactive'
   }
 }, {
   tableName: 'Users',
@@ -52,4 +32,6 @@ export const User = sequelize.define('User', {
   updatedAt: 'updated_at'
 });
 
-
+// Définir les relations après la définition du modèle
+User.hasMany(Comment, { foreignKey: 'user_id' });
+Comment.belongsTo(User, { foreignKey: 'user_id' });

@@ -1,6 +1,8 @@
 import sequelize from "../config/database.js";
 import { DataTypes } from "sequelize";
 import { Sequelize } from "sequelize";
+import { Comment } from './CommentModel.js'; // Importer le modèle Comment
+
 export const Event = sequelize.define('Event', {
   event_id: {
     type: DataTypes.INTEGER,
@@ -22,27 +24,6 @@ export const Event = sequelize.define('Event', {
   is_private: {
     type: DataTypes.BOOLEAN,
     defaultValue: false
-  },
-  created_by: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: 'Users',
-      key: 'user_id'
-    }
-  },
-  created_at: {
-    type: DataTypes.DATE,
-    defaultValue: Sequelize.NOW
-  },
-  updated_at: {
-    type: DataTypes.DATE,
-    defaultValue: Sequelize.NOW
-  },
-  title: {
-    type: DataTypes.STRING(100)
-  },
-  location: {
-    type: DataTypes.STRING(255)
   }
 }, {
   tableName: 'Events',
@@ -51,4 +32,6 @@ export const Event = sequelize.define('Event', {
   updatedAt: 'updated_at'
 });
 
-
+// Définir les relations après la définition du modèle
+Event.hasMany(Comment, { foreignKey: 'event_id' });
+Comment.belongsTo(Event, { foreignKey: 'event_id' });
