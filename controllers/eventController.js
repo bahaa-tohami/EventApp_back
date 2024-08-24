@@ -35,6 +35,36 @@ export const saveEvent = async (req, res) => {
     }
   };
 
+    /**
+   * Supprimer un événement
+   * @param {Request} req
+   * @param {Response} res
+   */
+    export const deleteEvent = async (req, res) => {
+        const eventId  = req.params.id;
+    
+        try {
+            const result = await Event.destroy({
+            where: { event_id: eventId }
+            });
+    
+            if (result > 0) {
+            return res.status(200).json({
+                message: `L'événement avec l'ID ${eventId} a été supprimé avec succès.`,
+            });
+            } else {
+            return res.status(404).json({
+                message: `Aucun événement trouvé avec l'ID ${eventId}.`,
+            });
+            }
+        } catch (error) {
+            return res.status(500).json({
+            message: 'Erreur lors de la suppression de l\'événement.',
+            error: error.message,
+            });
+        }
+      }
+
 
 
 
