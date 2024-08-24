@@ -1,4 +1,7 @@
 import { Event } from "../models/EventModel.js";
+import { Participant } from "../models/GuestModel.js";
+import  { User } from "../models/UserModel.js"
+
 /**
  * Enregistrer un nouvel événement
  * @param {Request} req
@@ -67,7 +70,7 @@ export const saveEvent = async (req, res) => {
 
       export const updateEvent = async (req, res) => {
         try {
-          const eventId  = req.params.id;
+            const eventId  = req.params.id;
             const { description, date, time, capacity, is_private, title, location } = req.body;
             const currentDate = new Date();
             const eventDate = new Date(date);
@@ -100,6 +103,40 @@ export const saveEvent = async (req, res) => {
             res.status(500).json({ message: "Erreur interne du serveur" });
         }
     };
+
+      export async function myInvitations(req, res) {
+        const userId  = req.params.id;
+      
+        const user = await User.findByPk(userId);   
+
+        if (!user) {
+          return res.status(400).json({ message: 'User ID invalide' });
+        }
+      
+        try {
+          const events = await Event.findAll({
+            include: [
+              {
+                model: Participant,
+                where: {
+                  user_id: userId
+                },
+                attributes: ['participant_id', 'invited_at', 'responded_at', 'status']
+              }
+            ]
+          });
+      
+          if (events.length === 0) {
+            return res.status(404).json({ message: 'Aucun évènement n\est disponible pour l\ utilisateur' });
+          }
+      
+          res.json(events);
+        } catch (error) {
+          console.error('Erreur lors de la recherche des événements avec les participants pour l’utilisateur :', error);
+          res.status(500).json({ message: 'Erreur interne du serveur' });
+        }
+      };
+  
 
 
 
