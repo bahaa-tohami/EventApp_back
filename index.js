@@ -7,6 +7,7 @@ import userRouter from "./routes/userRoute.js";
 import guestRouter from "./routes/guestRoute.js";
 import bodyParser from "body-parser";
 import eventRouter from "./routes/eventRoute.js";
+
 dotenv.config();
 
 const app = express();
