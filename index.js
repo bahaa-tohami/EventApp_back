@@ -22,15 +22,20 @@ app.use(express.urlencoded({ extended: true }));
 /* app.use(express.static("public")); */
 
 app.use(cors())
-// inti db
-initDB();
+
 app.use("/", userRouter)
 app.use("/event", eventRouter)
-// Vérification de la connexion
 
+
+sequelize.sync()
+  .then(() => {
+    console.log("Les tables ont été créées avec succès avec suppression en cascade activée.");
+    seedDatabase();  // insertion des données
+  })
+  .catch((error) => {
+    console.error("Erreur lors de la synchronisation des modèles:", error);
+  });
 
 app.listen(port, () => {
-
     console.log(`Serveur sur: ${BASE_URL}`);
-
-  });
+});

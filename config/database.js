@@ -1,7 +1,22 @@
 import { Sequelize } from "sequelize";
 import dotenv from "dotenv";
-
+import mysql from 'mysql2/promise';
 dotenv.config();
+
+// connexion a la base des données
+const connection = await mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+});
+
+// creation de la base de données
+try {
+    await connection.query(`CREATE DATABASE IF NOT EXISTS \`${process.env.DB_NAME}\`;`);
+    console.log(`La base de données ${process.env.DB_NAME} a été créée avec succès.`);
+} catch (error) {
+    console.error('Erreur lors de la création de la base de données:', error);
+}
 
 // Création d'une instance Sequelize avec les informations de connexion
 
@@ -18,4 +33,5 @@ dotenv.config();
     console.error('Impossible de se connecter à la base de données:', err);
   });
   export default sequelize;
+  
 
