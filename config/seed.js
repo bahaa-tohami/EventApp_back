@@ -196,29 +196,46 @@ async function seedDatabase() {
     await sequelize.authenticate();
     console.log('Connexion à la base de données réussie.');
 
-    // Synchroniser les modèles avec la base de données
-    //await sequelize.sync({ force: true });  // Utilise { force: true } pour supprimer les tables existantes et les recréer
+    
 
-    // Insérer les données de test
-    await User.bulkCreate(usersData);
-    console.log('Données des utilisateurs insérées.');
+     // Vérifier si la table User est vide
+     const countUser = await User.count();
+     if (countUser === 0) {
+        await User.bulkCreate(usersData);
+        console.log('Données des utilisateurs insérées.');
+     }
 
-    await Event.bulkCreate(eventsData);
-    console.log('Données des événements insérées.');
+     // Vérifier si la table Event est vide
+     const countEvent = await Event.count();
+     if (countEvent === 0) {
+        await Event.bulkCreate(eventsData);
+        console.log('Données des événements insérées.');
+     }
 
-    await Participant.bulkCreate(participantsData);
-    console.log('Données des participants insérées.');
+     // Vérifier si la table Participant est vide
+     const countParticipant = await Participant.count();
+     if (countParticipant === 0) {
+        await Participant.bulkCreate(participantsData);
+        console.log('Données des participants insérées.');
+     }
 
-    await Notification.bulkCreate(notificationsData);
-    console.log('Données des notifications insérées.');
+     // Vérifier si la table Notification est vide
+     const countNotification = await Notification.count();
+     if (countNotification === 0) {
+        await Notification.bulkCreate(notificationsData);
+        console.log('Données des notifications insérées.');
+     }
 
-    await Comment.bulkCreate(commentsData);
-    console.log('Données des commentaires insérées.');
+     // Vérifier si la table Comment est vide
+     const countComment = await Comment.count();
+     if (countComment === 0) {
+        await Comment.bulkCreate(commentsData);
+        console.log('Données des commentaires insérées.');
+     }
   } catch (error) {
     console.error('Erreur lors de l\'insertion des données :', error);
   } finally {
-    await sequelize.close();
-    console.log('Connexion à la base de données fermée.');
+    console.log('Données insérées avec succès.');
   }
 }
 
