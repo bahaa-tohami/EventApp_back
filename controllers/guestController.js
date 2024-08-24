@@ -10,42 +10,40 @@ import { Op } from 'sequelize'; // Importez Op pour les opérations Sequelize
  */
 export const addComment = async (req, res) => {
     try {
-      const { user_id, event_id, content, rating } = req.body;
-  
-      // Vérifiez que toutes les données nécessaires sont présentes
-      if (!user_id || !event_id || !content || rating === undefined) {
-        return res.status(400).json({ message: 'Données manquantes' });
-      }
-  
-      // Récupérer l'événement à partir de la base de données
-      const event = await Event.findByPk(event_id);
-  
-      if (!event) {
-        return res.status(404).json({ message: 'Événement non trouvé' });
-      }
-  
-      // Vérifier si la date de l'événement est passée
-      const currentDate = new Date();
-      if (new Date(event.date) > currentDate) {
-        return res.status(400).json({ message: 'Vous ne pouvez commenter que des événements passés' });
-      }
-  
-      // Vérifier que l'utilisateur est inscrit à l'événement
-      const guest = await Participant.findOne({ where: { user_id, event_id } });
-  
-      if (!guest) {
-        return res.status(403).json({ message: 'Vous devez être inscrit à l\'événement pour commenter' });
-      }
-  
-      // Ajouter le commentaire à l'événement
-      const newComment = await Comment.create({ user_id, event_id, content, rating });
-  
-      res.status(201).json({ message: 'Commentaire ajouté avec succès', comment: newComment });
+        const { user_id, event_id, content, rating } = req.body;
+
+        // Vérifiez que toutes les données nécessaires sont présentes
+        if (!user_id || !event_id || !content || rating === undefined) {
+            return res.status(400).json({ message: 'Données manquantes' });
+        }
+
+        // Récupérer l'événement à partir de la base de données
+        const event = await Event.findByPk(event_id);
+
+        if (!event) {
+            return res.status(404).json({ message: 'Événement non trouvé' });
+        }
+        // Vérifier que l'utilisateur est inscrit à l'événement
+        const guest = await Participant.findOne({ where: { user_id, event_id } });
+
+        if (!guest) {
+            return res.status(403).json({ message: 'Vous devez être inscrit à l\'événement pour commenter' });
+        }
+        // Vérifier si la date de l'événement est passée
+        const currentDate = new Date();
+        if (new Date(event.date) > currentDate) {
+            return res.status(400).json({ message: 'Vous ne pouvez commenter que des événements passés' });
+        }
+
+        // Ajouter le commentaire à l'événement
+        const newComment = await Comment.create({ user_id, event_id, content, rating });
+
+        res.status(201).json({ message: 'Commentaire ajouté avec succès', comment: newComment });
     } catch (error) {
-      console.error('Erreur lors de l\'ajout du commentaire:', error);
-      res.status(500).json({ message: 'Erreur interne du serveur' });
+        console.error('Erreur lors de l\'ajout du commentaire:', error);
+        res.status(500).json({ message: 'Erreur interne du serveur' });
     }
-  };
+};
 
 /**
  * Inviter un utilisateur à un événement.
@@ -54,32 +52,38 @@ export const addComment = async (req, res) => {
  */
 export const inviteUser = async (req, res) => {
     try {
-      const { user_id, event_id, participant_id } = req.body;
-  
-      // Récupérer l'événement à partir de la base de données
-      const event = await Event.findByPk(event_id);
-  
-      if (!event) {
-        return res.status(404).json({ message: 'Événement non trouvé' });
-      }
-  
-      // Vérifier que l'utilisateur est le créateur de l'événement
-      if (event.created_by !== user_id) {
-        return res.status(403).json({ message: 'Vous n\'êtes pas autorisé à inviter des utilisateurs à cet événement' });
-      }
-  
-      // Vérifier si l'utilisateur est déjà invité
-      const existingParticipant = await Participant.findOne({ where: { user_id: participant_id, event_id } });
-      if (existingParticipant) {
-        return res.status(400).json({ message: 'L\'utilisateur est déjà invité à cet événement' });
-      }
-  
-      // Ajouter l'invité à l'événement
-      const newParticipant = await Participant.create({ user_id: participant_id, event_id });
-  
-      res.status(201).json({ message: 'Utilisateur invité avec succès', participant: newParticipant });
+        const { user_id, event_id, participant_id } = req.body;
+
+        // Récupérer l'événement à partir de la base de données
+        const event = await Event.findByPk(event_id);
+
+        if (!event) {
+            return res.status(404).json({ message: 'Événement non trouvé' });
+        }
+
+        // Vérifier que l'utilisateur est le créateur de l'événement
+        if (event.created_by !== user_id) {
+            return res.status(403).json({ message: 'Vous n\'êtes pas autorisé à inviter des utilisateurs à cet événement' });
+        }
+
+        // Vérifier si l'utilisateur est déjà invité
+        const existingParticipant = await Participant.findOne({ where: { user_id: participant_id, event_id } });
+        if (existingParticipant) {
+            return res.status(400).json({ message: 'L\'utilisateur est déjà invité à cet événement' });
+        }
+
+        // Vérifier si la capacité de l'événement est atteinte
+        const currentParticipantsCount = await Participant.count({ where: { event_id } });
+        if (currentParticipantsCount >= event.capacity) {
+            return res.status(400).json({ message: 'La capacité de l\'événement est atteinte' });
+        }
+
+        // Ajouter l'invité à l'événement
+        const newParticipant = await Participant.create({ user_id: participant_id, event_id });
+
+        res.status(201).json({ message: 'Utilisateur invité avec succès', participant: newParticipant });
     } catch (error) {
-      console.error('Erreur lors de l\'invitation de l\'utilisateur:', error);
-      res.status(500).json({ message: 'Erreur interne du serveur' });
+        console.error('Erreur lors de l\'invitation de l\'utilisateur:', error);
+        res.status(500).json({ message: 'Erreur interne du serveur' });
     }
-  };
+};
