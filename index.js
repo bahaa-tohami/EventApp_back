@@ -1,6 +1,5 @@
 import express from "express";
 import sequelize from "./config/database.js";
-import initDB from "./config/initDb.js";
 import cors from "cors";
 import dotenv from "dotenv";
 import seedDatabase from "./config/seed.js";
