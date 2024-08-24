@@ -3,6 +3,8 @@ import { Participant } from '../models/GuestModel.js'; // Chemin corrigé
 import { Comment } from '../models/CommentModel.js'; // Chemin corrigé
 import { Op } from 'sequelize'; // Importez Op pour les opérations Sequelize
 import { User } from '../models/UserModel.js';
+import { Notification } from '../models/NotificationModel.js';
+import { sendEmail } from '../utils/sendMail.js';
 
 /**
  * Ajouter un commentaire à un événement.
@@ -82,6 +84,23 @@ export const inviteUser = async (req, res) => {
 
         // Ajouter l'invité à l'événement
         const newParticipant = await Participant.create({ user_id: participant_id, event_id });
+
+         // Créer une notification dans la base de données
+        const notificationMessage = `Vous avez été invité à l'événement ID: ${event_id}. Veuillez vérifier les détails et répondre.`;
+
+        await Notification.create({
+            user_id: user_id,
+            event_id: event_id,
+            message: notificationMessage,
+            type: 'invitation'
+        });
+
+         // Envoyer un e-mail à l'utilisateur invité
+        const user = await User.findByPk(user_id);
+        const emailSubject = 'Invitation à un événement';
+        const emailText = `Bonjour ${user.username},\n\nVous avez été invité à participer à l'événement ID: ${event_id}. Veuillez vous connecter pour plus de détails.\n\nMerci.`;
+
+        await sendEmail(user.email, emailSubject, emailText);
 
         res.status(201).json({ message: 'Utilisateur invité avec succès', participant: newParticipant });
     } catch (error) {
