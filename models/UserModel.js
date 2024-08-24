@@ -21,15 +21,36 @@ export const User = sequelize.define('User', {
       isEmail: true
     }
   },
+  first_name: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  last_name: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
   password_hash: {
     type: DataTypes.STRING,
     allowNull: false
-  }
+  },
+  role: {
+    type: DataTypes.ENUM('user', 'admin'),
+    defaultValue: 'user'
+  },
+  status: {
+    type: DataTypes.ENUM('active', 'inactive'),
+    defaultValue: 'active'
+  },
+  deletedAt: {
+    type: DataTypes.DATE,
+    allowNull: true
+  },
 }, {
   tableName: 'Users',
   timestamps: true,
   createdAt: 'created_at',
-  updatedAt: 'updated_at'
+  updatedAt: 'updated_at',
+  paranoid: true
 });
 
 // Définir les relations après la définition du modèle

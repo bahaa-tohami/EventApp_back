@@ -36,6 +36,14 @@ export const Event = sequelize.define('Event', {
     type: DataTypes.BOOLEAN,
     defaultValue: false
   },
+  title: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  location: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
   deletedAt: {
     type: DataTypes.DATE,
     allowNull: true
