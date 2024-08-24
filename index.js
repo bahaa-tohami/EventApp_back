@@ -4,6 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import seedDatabase from "./config/seed.js";
 import userRouter from "./routes/userRoute.js";
+import guestRouter from "./routes/guestRoute.js";
 import bodyParser from "body-parser";
 import eventRouter from "./routes/eventRoute.js";
 dotenv.config();
@@ -23,6 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors())
 
 app.use("/", userRouter)
+app.use("/", guestRouter)
 app.use("/event", eventRouter)
 
 

@@ -18,6 +18,9 @@ export const Event = sequelize.define('Event', {
   date: {
     type: DataTypes.DATEONLY
   },
+  created_by: {
+    type: DataTypes.INTEGER
+  },
   time: {
     type: DataTypes.TIME
   },
