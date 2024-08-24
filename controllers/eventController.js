@@ -65,6 +65,44 @@ export const saveEvent = async (req, res) => {
         }
       }
 
+      export const updateEvent = async (req, res) => {
+        try {
+          const eventId  = req.params.id;
+            const { description, date, time, capacity, is_private, title, location } = req.body;
+            const currentDate = new Date();
+            const eventDate = new Date(date);
+    
+            if (eventDate < currentDate) {
+                return res.status(400).json({ error: "La date de l'événement est passée. Veuillez choisir une date future." });
+            }
+            if (capacity <= 1) {
+                return res.status(400).json({ error: "La capacité de l'événement doit être supérieure à 1." });
+            }
+    
+            const event = await Event.findByPk(eventId);
+            if (!event) {
+                return res.status(404).json({ error: "Événement non trouvé." });
+            }
+    
+            event.description = description;
+            event.date = date;
+            event.time = time;
+            event.capacity = capacity;
+            event.is_private = is_private;
+            event.title = title;
+            event.location = location;
+    
+            await event.save();
+    
+            res.status(200).json({ message: "Événement mis à jour avec succès", event });
+        } catch (error) {
+            console.error("Erreur lors de la mise à jour de l'événement:", error);
+            res.status(500).json({ message: "Erreur interne du serveur" });
+        }
+    };
+
+
+
 
 
 
