@@ -7,8 +7,8 @@ import { updateEvent } from '../controllers/eventController.js';
 
 const router = express.Router();
 
-router.post('/saveEvent/:id', saveEvent);
-router.delete('/deleteEvent/:id', deleteEvent);
-router.put('/updateEvent/:id', updateEvent);
+router.post('/save-event/:id', saveEvent);
+router.delete('/delete-event/:id', deleteEvent);
+router.put('/update-event/:id', updateEvent);
 
 export default router;

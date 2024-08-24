@@ -2,6 +2,7 @@ import { Event } from '../models/EventModel.js'; // Chemin corrigé
 import { Participant } from '../models/GuestModel.js'; // Chemin corrigé
 import { Comment } from '../models/CommentModel.js'; // Chemin corrigé
 import { Op } from 'sequelize'; // Importez Op pour les opérations Sequelize
+import { User } from '../models/UserModel.js';
 
 /**
  * Ajouter un commentaire à un événement.
@@ -56,6 +57,7 @@ export const inviteUser = async (req, res) => {
 
         // Récupérer l'événement à partir de la base de données
         const event = await Event.findByPk(event_id);
+        
 
         if (!event) {
             return res.status(404).json({ message: 'Événement non trouvé' });
@@ -87,3 +89,35 @@ export const inviteUser = async (req, res) => {
         res.status(500).json({ message: 'Erreur interne du serveur' });
     }
 };
+
+
+export const invitationResponse = async (req, res) => {
+    try {
+        const { user_id, event_id, participant_id, status } = req.body;
+        const currentDate = new Date();
+        // Récupérer l'événement à partir de la base de données
+        const event = await Event.findByPk(event_id);
+        const user = await User.findByPk(user_id);
+        const participant = await Participant.findByPk(participant_id);
+        
+
+        if(participant.user_id != user_id || participant.event_id != event_id){
+            return res.status(404).json({ message: 'L\Utilisteur n\est pas  invité'});
+        }
+      
+        if (participant.status != "invited") {
+            return res.status(404).json({ message: 'L\Utilisateur a déjà répondu à l _invitation' });
+        }
+       
+
+       participant.status = status;
+       participant.responded_at = currentDate;
+       await participant.save();   
+
+        res.status(201).json({ message: 'L\Utilisateur a répondu avec succès à l\invitation ', participant});
+    } catch (error) {
+        console.error('Erreur lors de la réponse à l\'invitation r:', error);
+        res.status(500).json({ message: 'Erreur interne du serveur' });
+    }
+};
+
