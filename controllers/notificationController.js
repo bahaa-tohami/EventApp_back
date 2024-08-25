@@ -2,7 +2,7 @@ import { Op } from 'sequelize';
 import { Event } from '../models/EventModel.js';
 import { Participant } from '../models/GuestModel.js';
 import { Notification } from '../models/NotificationModel.js';
-import cron from 'node-cron';
+
 
 const inComingEvents = async () => {
      // Les événements qui se déroulent dans les prochaines 24 heures
@@ -33,6 +33,7 @@ const inComingEvents = async () => {
 }
 
 export const sendRemindersNotifications = async () => {
+    console.log("cron job");
     // parcourir les événements et pour chaque evenement voir les participants
     const events = await inComingEvents();
     events.forEach(async (event) => {
@@ -62,5 +63,3 @@ export const sendRemindersNotifications = async () => {
 
 };
 
-//Cron pour envoyer les notifications toutes les 4 heures
-cron.schedule('0 */4 * * *', sendRemindersNotifications);
