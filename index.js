@@ -7,7 +7,7 @@ import userRouter from "./routes/userRoute.js";
 import guestRouter from "./routes/guestRoute.js";
 import bodyParser from "body-parser";
 import eventRouter from "./routes/eventRoute.js";
-
+import notificationRouter from "./routes/notificationRoute.js";
 dotenv.config();
 
 const app = express();
@@ -26,6 +26,7 @@ app.use(cors())
 
 app.use("/", userRouter)
 app.use("/", guestRouter)
+app.use("/", notificationRouter)
 app.use("/event", eventRouter)
 
 
