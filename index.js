@@ -39,9 +39,9 @@ sequelize.sync()
   .catch((error) => {
     console.error("Erreur lors de la synchronisation des modèles:", error);
   });
-  
+
 //Cron pour envoyer les notifications toutes les 4 heures
-cron.schedule('*/1 * * * *', sendRemindersNotifications);
+cron.schedule('0 */2 * * *', sendRemindersNotifications);
 
 app.listen(port, () => {
     console.log(`Serveur sur: ${BASE_URL}`);
