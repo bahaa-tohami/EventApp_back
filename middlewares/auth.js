@@ -3,7 +3,7 @@ import { User } from '../models/UserModel.js';
  
 export const isLogged = (req, res, next) => {
 
-   // On va extraire le token du headers
+ 
    
   let authToken = req.headers.authorization;
   let token = authToken && authToken.split(" ")[1];
