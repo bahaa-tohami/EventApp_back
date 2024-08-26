@@ -16,3 +16,28 @@ export const listUsers = async (req, res) => {
     res.status(500).json({ message: 'Erreur interne du serveur' });
   }
 };
+
+/**
+ * Activer un utilisateur.
+ * @param {Request} req
+ * @param {Response} res
+ */
+export const activateUser = async (req, res) => {
+  try {
+    const { user_id } = req.body;
+ 
+    const user = await User.findByPk(user_id);
+    if (!user) {
+      return res.status(404).json({ message: 'Utilisateur non trouvé' });
+    }
+ 
+    user.status = 'active';
+    await user.save();
+ 
+    res.status(200).json({ message: 'Utilisateur activé avec succès' });
+  } catch (error) {
+    console.error('Erreur lors de l\'activation de l\'utilisateur:', error);
+    res.status(500).json({ message: 'Erreur interne du serveur' });
+  }
+};
+
