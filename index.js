@@ -14,6 +14,8 @@ import cron from "node-cron";
 
 
 
+
+
 dotenv.config();
 
 const app = express();
@@ -25,6 +27,7 @@ const BASE_URL = "http://localhost:9000";
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
+
 
 /* app.use(express.static("public")); */
 
@@ -48,7 +51,8 @@ sequelize.sync()
   });
 
 //Cron pour envoyer les notifications toutes les 4 heures
-cron.schedule('0 */2 * * *', sendRemindersNotifications);
+cron.schedule('* */4 * * *', sendRemindersNotifications);
+
 
 app.listen(port, () => {
     console.log(`Serveur sur: ${BASE_URL}`);

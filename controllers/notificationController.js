@@ -37,6 +37,7 @@ export const sendRemindersNotifications = async () => {
     // parcourir les événements et pour chaque evenement voir les participants
     const events = await inComingEvents();
     events.forEach(async (event) => {
+        console.log(event);
         event.Participants.forEach(async participant => {  
             const message = `L'evenement: ${event.title} va se dérouler dans les prochaines 24 heures`;
             //Trouver si l'utilisateur a déjà une notification de ce type pour cet événement

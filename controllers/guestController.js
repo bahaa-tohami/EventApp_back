@@ -5,12 +5,16 @@ import { Op } from 'sequelize'; // Importez Op pour les opérations Sequelize
 import { User } from '../models/UserModel.js';
 import { Notification } from '../models/NotificationModel.js';
 import { sendEmail } from '../utils/sendMail.js';
+import { getUserIdFromToken } from '../utils/getUserIdFromToken.js';
+
 
 /**
  * Ajouter un commentaire à un événement.
  * @param {Request} req
  * @param {Response} res
  */
+
+/*
 export const addComment = async (req, res) => {
     try {
         const { user_id, event_id, content, rating } = req.body;
@@ -47,6 +51,7 @@ export const addComment = async (req, res) => {
         res.status(500).json({ message: 'Erreur interne du serveur' });
     }
 };
+*/
 
 /**
  * Inviter un utilisateur à un événement.
@@ -56,6 +61,11 @@ export const addComment = async (req, res) => {
 export const inviteUser = async (req, res) => {
     try {
         const { user_id, event_id, participant_id } = req.body;
+        
+        const tokenUserId = getUserIdFromToken(req);
+        if(tokenUserId != user_id) {
+            return res.json({ message: "Vous n'êtes pas autorisé à inviter des utilisateurs à cet événement" });
+        }
 
         // Récupérer l'événement à partir de la base de données
         const event = await Event.findByPk(event_id);
@@ -106,15 +116,25 @@ export const inviteUser = async (req, res) => {
 export const invitationResponse = async (req, res) => {
     try {
         const { user_id, event_id, participant_id, status } = req.body;
+        
+        if(status != "accepted" && status != "declined"){
+            return res.status(400).json({ message: "Le statut doit être 'accepted' ou 'declined'" });
+        }
         const currentDate = new Date();
+        const tokenUserId = getUserIdFromToken(req);
+        if(tokenUserId != user_id) {
+            return res.json({ message: "Vous n'êtes pas autorisé à répondre à cette invitation" });
+        }
         // Récupérer l'événement à partir de la base de données
         const event = await Event.findByPk(event_id);
         const user = await User.findByPk(user_id);
         const participant = await Participant.findByPk(participant_id);
-        
+        if(!participant){
+            return res.status(404).json({ message: "L'utilisateur n'est pas invité"});
+        }
 
         if(participant.user_id != user_id || participant.event_id != event_id){
-            return res.status(404).json({ message: 'L\Utilisteur n\est pas  invité'});
+            return res.status(404).json({ message: "L'utilisateur n'est pas invité"});
         }
       
         if (participant.status != "invited") {
