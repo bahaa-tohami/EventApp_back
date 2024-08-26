@@ -1,12 +1,17 @@
 import { Comment } from "../models/CommentModel.js";
 import { Event } from "../models/EventModel.js";
 import { Participant } from "../models/GuestModel.js";
+import { getUserIdFromToken } from "../utils/getUserIdFromToken.js";
+
 
 
 
 export const createComment = async (req, res) => {
     const { content, user_id, event_id, rating } = req.body;
-
+    const tokenUserId = getUserIdFromToken(req);
+    if(tokenUserId != user_id){
+        return res.status(401).json({ message: "Vous n'êtes pas autorisé à créer un commentaire pour cet evenement" });
+    }
     
         try {
             // Récupérer l'événement par son ID pour vérifier sa date et heure

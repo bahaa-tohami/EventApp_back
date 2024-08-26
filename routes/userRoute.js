@@ -2,10 +2,10 @@ import express from 'express';
 import { createUser, getUserProfile, loginUser, updateUserProfile } from '../controllers/userController.js';
 import { isLogged } from '../middlewares/auth.js';
 
-const router = express.Router();
 
-// Route pour récupérer le profil d'un utilisateur par son ID
+const router = express.Router();
 router.get('/profile/:id', isLogged, getUserProfile);
+
 // Route pour mettre à jour le profil d'un utilisateur par son ID
 router.put('/profile/:id', isLogged, updateUserProfile);
 // Route pour créer un nouvel utilisateur

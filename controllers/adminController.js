@@ -31,7 +31,9 @@ export const activateUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'Utilisateur non trouvé' });
     }
- 
+    if(user.status == "active"){
+        return res.status(400).json({ message: 'Utilisateur déjà activé' });
+    }
     user.status = 'active';
     await user.save();
  
@@ -81,7 +83,9 @@ export const deactivateUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'Utilisateur non trouvé' });
     }
- 
+    if(user.status == "inactive"){
+        return res.status(400).json({ message: 'Utilisateur déjà désactivé' });
+    }
     user.status = 'inactive';
     await user.save();
  
@@ -107,7 +111,9 @@ export const updateUserRole = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'Utilisateur non trouvé' });
     }
- 
+    if(user.role == role){
+        return res.status(400).json({ message: 'Rôle de l\'utilisateur déjà mis à jour' });
+    }
     user.role = role;
     await user.save();
  

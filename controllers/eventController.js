@@ -1,16 +1,21 @@
 import { Event } from "../models/EventModel.js";
 import { Participant } from "../models/GuestModel.js";
 import  { User } from "../models/UserModel.js"
-
+import { getUserIdFromToken } from "../utils/getUserIdFromToken.js";
 /**
  * Enregistrer un nouvel événement
  * @param {Request} req
  * @param {Response} res
  */
 export const saveEvent = async (req, res) => {
+    const userId = req.params.id;
+    const tokenUserId = getUserIdFromToken(req);
+    if(tokenUserId != userId) {
+        return res.json({ message: "Vous n'êtes pas autorisé à créer un événement" });
+    }
     try {
-      const userId = req.params.id;
       const { description, date, time, capacity, is_private, title, location } = req.body;
+      
       const currentDate = new Date();
       const eventDate = new Date(date);
 
@@ -45,21 +50,24 @@ export const saveEvent = async (req, res) => {
    */
     export const deleteEvent = async (req, res) => {
         const eventId  = req.params.id;
+        const tokenUserId = getUserIdFromToken(req);
+      
     
         try {
-            const result = await Event.destroy({
-            where: { event_id: eventId }
-            });
-    
-            if (result > 0) {
+            const event = await Event.findByPk(eventId);
+            if (!event) {
+                return res.status(404).json({ error: "Événement non trouvé." });
+            }
+            if (event.created_by != tokenUserId) {
+                return res.status(403).json({ error: "Vous n'êtes pas autorisé à supprimer cet événement." });
+            }
+            const result = await Event.destroy({where: {event_id: eventId}});
+            
             return res.status(200).json({
                 message: `L'événement avec l'ID ${eventId} a été supprimé avec succès.`,
             });
-            } else {
-            return res.status(404).json({
-                message: `Aucun événement trouvé avec l'ID ${eventId}.`,
-            });
-            }
+            
+            
         } catch (error) {
             return res.status(500).json({
             message: 'Erreur lors de la suppression de l\'événement.',
@@ -69,8 +77,9 @@ export const saveEvent = async (req, res) => {
       }
 
       export const updateEvent = async (req, res) => {
+        const tokenUserId = getUserIdFromToken(req);
+        const eventId  = req.params.id;
         try {
-            const eventId  = req.params.id;
             const { description, date, time, capacity, is_private, title, location } = req.body;
             const currentDate = new Date();
             const eventDate = new Date(date);
@@ -86,6 +95,10 @@ export const saveEvent = async (req, res) => {
             if (!event) {
                 return res.status(404).json({ error: "Événement non trouvé." });
             }
+            if (event.created_by != tokenUserId) {
+                return res.status(403).json({ error: "Vous n'êtes pas autorisé à modifier cet événement." });
+            }
+
     
             event.description = description;
             event.date = date;
@@ -106,7 +119,10 @@ export const saveEvent = async (req, res) => {
 
       export async function myInvitations(req, res) {
         const userId  = req.params.id;
-      
+        const tokenUserId = getUserIdFromToken(req);
+        if(tokenUserId != userId) {
+            return res.json({ message: "Vous n'êtes pas autorisé à voir les invitations de cet utilisateur" });
+        }
         const user = await User.findByPk(userId);   
 
         if (!user) {

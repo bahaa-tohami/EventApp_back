@@ -2,15 +2,20 @@ import { User } from '../models/UserModel.js';
 import bcrypt from 'bcrypt';
 import { Op } from 'sequelize';
 import jwt from 'jsonwebtoken';
-
+import { getUserIdFromToken } from '../utils/getUserIdFromToken.js';
 /**
  * Obtenir le profil d'un utilisateur par son ID.
  * @param {Request} req
  * @param {Response} res
  */
 export const getUserProfile = async (req, res) => {
+    // Récupère l'ID de l'utilisateur à partir des paramètres de la route
+    const userId = req.params.id; 
+    const tokenUserId = getUserIdFromToken(req);
+    if(tokenUserId != userId) {
+        return res.json({ message: "Vous n'êtes pas autorisé à accéder à cette page" });
+    }
     try {
-        const userId = req.params.id; // Récupère l'ID de l'utilisateur à partir des paramètres de la route
         const user = await User.findByPk(userId, {
             attributes: ['user_id', 'username', 'email', 'first_name', 'last_name', 'role', 'status', 'created_at', 'updated_at']
         });
@@ -35,7 +40,10 @@ export const updateUserProfile = async (req, res) => {
     try {
         const userId = req.params.id;
         const updatedData = req.body;
-
+        const tokenUserId = getUserIdFromToken(req);
+        if(tokenUserId != userId) {
+            return res.json({ message: "Vous n'êtes pas autorisé à accéder à cette page" });
+        }
         // Trouver l'utilisateur par ID
         const user = await User.findByPk(userId);
 
@@ -63,6 +71,14 @@ export const createUser = async (req, res) => {
         const userData = req.body;
         const checkPwd = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,30}$/;
         const existingUser = await User.findOne({ where: { email: userData.email } });
+        const checkUsername = /^[a-zA-Z0-9_-]{5,30}$/;
+        const checkEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if(!checkUsername.test(req.body.username)) {
+            return res.json({message: "Le username ne respecte pas les conditions"})
+        }
+        if(!checkEmail.test(req.body.email)) {
+            return res.json({message: "L'email ne respecte pas les conditions"})
+        }
 
         if (existingUser) {
             return res.status(400).json({ message: 'Cette adresse e-mail est déjà utilisée' });
@@ -111,13 +127,13 @@ export const loginUser = async (req, res) => {
      
  
       if (!user) {
-        return res.status(400).json({ message: 'Adrress email ou username invalide' });
+        return res.status(400).json({ message: 'Adresse email ou username invalide' });
       }
    
       //compare password
       const isMatch = await bcrypt.compare(password, user.password_hash);
       if (!isMatch) {
-        return res.status(400).json({ message: 'Mot de passe incorrect' });
+        return res.status(400).json({ message: 'Mot de passe invalide' });
       }
  
       // Generate JWT
