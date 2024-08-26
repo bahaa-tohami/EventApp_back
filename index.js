@@ -7,16 +7,10 @@ import userRouter from "./routes/userRoute.js";
 import guestRouter from "./routes/guestRoute.js";
 import bodyParser from "body-parser";
 import eventRouter from "./routes/eventRoute.js";
-
 import commentRoutes from "./routes/commentRoute.js"
-
-import adminRouter from "./routes/adminRoute.js";
-
-
 import adminRouter from "./routes/adminRoute.js";
 import { sendRemindersNotifications } from "./controllers/notificationController.js";
 import cron from "node-cron";
-import commentRoutes from "./routes/commentRoute.js" 
 
 
 
@@ -39,15 +33,8 @@ app.use(cors())
 app.use("/", userRouter)
 app.use("/", guestRouter)
 app.use("/event", eventRouter)
-
-app.use("/", adminRouter)
-
-
 app.use("/", commentRoutes)
-
-
-
-
+app.use("/", adminRouter)
 
 
 
