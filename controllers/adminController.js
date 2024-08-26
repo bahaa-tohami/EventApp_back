@@ -41,3 +41,25 @@ export const activateUser = async (req, res) => {
   }
 };
 
+/**
+ * Supprimer un utilisateur.
+ * @param {Request} req
+ * @param {Response} res
+ */
+export const deleteUser = async (req, res) => {
+  try {
+    const { user_id } = req.body;
+ 
+    const user = await User.findByPk(user_id);
+    if (!user) {
+      return res.status(404).json({ message: 'Utilisateur non trouvé' });
+    }
+ 
+    await user.destroy();
+ 
+    res.status(200).json({ message: 'Utilisateur supprimé avec succès' });
+  } catch (error) {
+    console.error('Erreur lors de la suppression de l\'utilisateur:', error);
+    res.status(500).json({ message: 'Erreur interne du serveur' });
+  }
+};
