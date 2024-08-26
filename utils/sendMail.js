@@ -30,4 +30,5 @@ export const sendEmail = async (to, subject, text) => {
       console.error('Erreur lors de l\'envoi de l\'e-mail:', error);
       throw error;
     }
+    
   };
