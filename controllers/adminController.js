@@ -42,6 +42,7 @@ export const activateUser = async (req, res) => {
   }
 };
 
+
 /**
  * Supprimer un utilisateur.
  * @param {Request} req
@@ -64,6 +65,7 @@ export const deleteUser = async (req, res) => {
     res.status(500).json({ message: 'Erreur interne du serveur' });
   }
 };
+
 
 /**
  * Désactiver un utilisateur.
@@ -172,4 +174,5 @@ export const deleteEvent = async (req, res) => {
     res.status(500).json({ message: 'Erreur interne du serveur' });
   }
 };
+
 

@@ -12,6 +12,7 @@ router.put('/admin/users/deactivate', isLogged, isAdmin, deactivateUser);
 router.put('/admin/users/role', isLogged, isAdmin, updateUserRole);
 router.put('/admin/events', isLogged, isAdmin, updateEvent);
 router.delete('/admin/events', isLogged, isAdmin, deleteEvent);
+
  
 export default router;
  

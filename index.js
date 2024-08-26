@@ -9,6 +9,10 @@ import bodyParser from "body-parser";
 import eventRouter from "./routes/eventRoute.js";
 import commentRoutes from "./routes/commentRoute.js"
 import adminRouter from "./routes/adminRoute.js";
+import { sendRemindersNotifications } from "./controllers/notificationController.js";
+import cron from "node-cron";
+
+
 
 dotenv.config();
 
@@ -42,6 +46,9 @@ sequelize.sync()
   .catch((error) => {
     console.error("Erreur lors de la synchronisation des modèles:", error);
   });
+
+//Cron pour envoyer les notifications toutes les 4 heures
+cron.schedule('0 */2 * * *', sendRemindersNotifications);
 
 app.listen(port, () => {
     console.log(`Serveur sur: ${BASE_URL}`);
