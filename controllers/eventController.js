@@ -152,6 +152,30 @@ export const saveEvent = async (req, res) => {
           res.status(500).json({ message: 'Erreur interne du serveur' });
         }
       };
+
+      export const getEvents = async (req, res) => {
+        try {
+          const events = await Event.findAll();
+          res.json(events);
+        } catch (error) {
+          console.error('Erreur lors de la recherche des événements :', error);
+          res.status(500).json({ message: 'Erreur interne du serveur' });
+        }
+      };
+      export const getEventsByUser = async (req, res) => {
+        const userId = req.params.id;
+        try {
+          const events = await Event.findAll({
+            where: {
+              created_by: userId
+            }
+          });
+          res.json(events);
+        } catch (error) {
+          console.error('Erreur lors de la recherche des événements par utilisateur :', error);
+          res.status(500).json({ message: 'Erreur interne du serveur' });
+        }
+      };
   
 
 
