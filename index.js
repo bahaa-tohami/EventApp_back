@@ -7,7 +7,11 @@ import userRouter from "./routes/userRoute.js";
 import guestRouter from "./routes/guestRoute.js";
 import bodyParser from "body-parser";
 import eventRouter from "./routes/eventRoute.js";
+<<<<<<< HEAD
 import commentRoutes from "./routes/commentRoute.js"
+=======
+import adminRouter from "./routes/adminRoute.js";
+>>>>>>> 399ac77 (avoir la liste des utilisateurs)
 
 dotenv.config();
 
@@ -28,7 +32,12 @@ app.use(cors())
 app.use("/", userRouter)
 app.use("/", guestRouter)
 app.use("/event", eventRouter)
+<<<<<<< HEAD
 app.use("/", commentRoutes)
+=======
+app.use("/", adminRouter)
+
+>>>>>>> 399ac77 (avoir la liste des utilisateurs)
 
 
 sequelize.sync()
