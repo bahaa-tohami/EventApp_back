@@ -1,5 +1,7 @@
 import { Comment } from "../models/CommentModel.js";
 import { Event } from "../models/EventModel.js";
+import { Participant } from "../models/GuestModel.js";
+
 
 
 export const createComment = async (req, res) => {
@@ -25,6 +27,20 @@ export const createComment = async (req, res) => {
             if (currentDateTime < eventDateTime) {
                 return res.status(400).json({
                     message: "Vous ne pouvez commenter que lorsque l'événement est terminé."
+                });
+            }
+
+            // Vérifier si l'utilisateur est invité à l'événement
+            const participant = await Participant.findOne({
+                where: {
+                    user_id: user_id,
+                    event_id: event_id
+                }
+            });
+
+            if (!participant || participant.status !== 'accepted') {
+                return res.status(403).json({
+                    message: "Vous devez être invité à l'événement et avoir accepté l'invitation pour pouvoir commenter."
                 });
             }
 
