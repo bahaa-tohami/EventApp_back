@@ -138,9 +138,9 @@ export const loginUser = async (req, res) => {
  
       // Generate JWT
       const token = jwt.sign({ userId: user.user_id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
- 
+     
       // retourner le token
-      res.status(200).json({ message: 'Connexion réussie.', token });
+      res.status(200).json({ message: 'Connexion réussie.', token, userId: user.user_id  });
  
     } catch (error) {
       console.error('Erreur lors de la création de l\'utilisateur:', error);
