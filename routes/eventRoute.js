@@ -17,8 +17,9 @@ router.post('/save-event/:id',isLogged  , saveEvent);
 router.delete('/delete-event/:id',isLogged, deleteEvent);
 router.put('/update-event/:id',isLogged, updateEvent);
 router.get('/my-invitations/:id',isLogged, myInvitations);
-router.get('/events-by-user/:id', getEventsByUser);
-router.get('/events', getEvents);
+router.get('/events-by-user/:id', isLogged, getEventsByUser);
+router.get('/events',isLogged, getEvents);
+
 
 
 export default router;
