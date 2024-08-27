@@ -52,9 +52,9 @@ export const activateUser = async (req, res) => {
  */
 export const deleteUser = async (req, res) => {
   try {
-    const { user_id } = req.body;
+    const userId = req.params.id;
  
-    const user = await User.findByPk(user_id);
+    const user = await User.findByPk(userId);
     if (!user) {
       return res.status(404).json({ message: 'Utilisateur non trouvé' });
     }
