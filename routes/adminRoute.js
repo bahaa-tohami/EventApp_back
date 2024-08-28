@@ -6,12 +6,12 @@ const router = express.Router();
  
 
 router.get('/admin/users', isLogged, isAdmin, listUsers);
-router.put('/admin/users/activate', isLogged, isAdmin, activateUser);
+router.put('/admin/users/activate/:id', isLogged, isAdmin, activateUser);
 router.delete('/admin/users/delete/:id', isLogged, isAdmin, deleteUser);
-router.put('/admin/users/deactivate', isLogged, isAdmin, deactivateUser);
-router.put('/admin/users/role', isLogged, isAdmin, updateUserRole);
-router.put('/admin/events', isLogged, isAdmin, updateEvent);
-router.delete('/admin/events', isLogged, isAdmin, deleteEvent);
+router.put('/admin/users/deactivate/:id', isLogged, isAdmin, deactivateUser);
+router.put('/admin/users/role/:id', isLogged, isAdmin, updateUserRole);
+router.put('/admin/events/:id', isLogged, isAdmin, updateEvent);
+router.delete('/admin/events/:id', isLogged, isAdmin, deleteEvent);
 
  
 export default router;
