@@ -160,7 +160,10 @@ export const saveEvent = async (req, res) => {
             include: [
               {
                 model: User,
-                attributes: ['username']
+                attributes: ['username'],
+                where: {
+                  deletedAt: null // Exclude soft-deleted users
+                }
               }
             ]
           });
