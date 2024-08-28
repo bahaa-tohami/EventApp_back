@@ -1,5 +1,5 @@
 import express from 'express';
-import { createUser, getUserProfile, loginUser, updateUserProfile } from '../controllers/userController.js';
+import { createUser, getUsernames, getUserProfile, loginUser, updateUserProfile } from '../controllers/userController.js';
 import { isLogged } from '../middlewares/auth.js';
 
 const router = express.Router();
@@ -15,4 +15,7 @@ router.post("/login", loginUser);
 
 // // Route pour ajouter un commentaire à un événement
 // router.post('/comments', addComment);
+
+// Route pour récupérer la liste des utilisateurs
+router.get('/usernames', getUsernames);
 export default router;

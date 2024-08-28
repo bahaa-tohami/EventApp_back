@@ -139,7 +139,14 @@ export const saveEvent = async (req, res) => {
 
       export const getEvents = async (req, res) => {
         try {
-          const events = await Event.findAll();
+          const events = await Event.findAll({
+            include: [
+              {
+                model: User,
+                attributes: ['username']
+              }
+            ]
+          });
           res.json(events);
         } catch (error) {
           console.error('Erreur lors de la recherche des événements :', error);
