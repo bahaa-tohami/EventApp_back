@@ -147,3 +147,23 @@ export const loginUser = async (req, res) => {
       res.status(500).json({ message: 'Erreur interne du serveur' });
     }
   };
+
+  /**
+ * Récupérer la liste des utilisateurs avec seulement leur nom d'utilisateur.
+ * @param {Request} req
+ * @param {Response} res
+ */
+export const getUsernames = async (req, res) => {
+  try {
+      // Récupérer les utilisateurs avec seulement leur nom d'utilisateur
+      const users = await User.findAll({
+          attributes: ['username']
+      });
+
+      // Retourner la liste des noms d'utilisateur
+      res.status(200).json(users);
+  } catch (error) {
+      console.error('Erreur lors de la récupération des utilisateurs:', error);
+      res.status(500).json({ message: 'Erreur interne du serveur' });
+  }
+};
