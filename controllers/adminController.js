@@ -25,9 +25,9 @@ export const listUsers = async (req, res) => {
  */
 export const activateUser = async (req, res) => {
   try {
-    const { user_id } = req.body;
+    const userId = req.params.id;
  
-    const user = await User.findByPk(user_id);
+    const user = await User.findByPk(userId);
     if (!user) {
       return res.status(404).json({ message: 'Utilisateur non trouvé' });
     }
@@ -77,9 +77,9 @@ export const deleteUser = async (req, res) => {
 export const deactivateUser = async (req, res) => {
  
   try {
-    const { user_id } = req.body;
+    const userId = req.params.id;
  
-    const user = await User.findByPk(user_id);
+    const user = await User.findByPk(userId);
     if (!user) {
       return res.status(404).json({ message: 'Utilisateur non trouvé' });
     }
@@ -105,9 +105,10 @@ export const deactivateUser = async (req, res) => {
 export const updateUserRole = async (req, res) => {
  
   try {
-    const { user_id, role } = req.body;
+    const userId = req.params.id;
+    const {role} = req.body;
  
-    const user = await User.findByPk(user_id);
+    const user = await User.findByPk(userId);
     if (!user) {
       return res.status(404).json({ message: 'Utilisateur non trouvé' });
     }
