@@ -201,6 +201,34 @@ export const saveEvent = async (req, res) => {
           res.status(500).json({ message: 'Erreur interne du serveur' });
         }
       };
+
+      export const getEventsByEventId = async (req, res) => {
+        const eventId = req.params.id;
+   
+        try {
+            // Trouver l'événement par son ID
+            const event = await Event.findByPk(eventId, {
+                include: [
+                    {
+                        model: Comment,
+                     
+                        attributes: ['content', 'rating']
+                    }
+                ]
+            });
+   
+            // Vérifier si l'événement existe
+            if (!event) {
+                return res.status(404).json({ error: "Événement non trouvé." });
+            }
+   
+            // Répondre avec les détails de l'événement
+            res.status(200).json(event);
+        } catch (error) {
+            console.error('Erreur lors de la récupération de l\'événement:', error);
+            res.status(500).json({ message: 'Erreur interne du serveur' });
+        }
+    };
   
 
 
