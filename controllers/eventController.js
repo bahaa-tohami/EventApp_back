@@ -2,6 +2,7 @@ import { Event } from "../models/EventModel.js";
 import { Participant } from "../models/GuestModel.js";
 import  { User } from "../models/UserModel.js"
 import { getUserIdFromToken } from "../utils/getUserIdFromToken.js";
+import { Sequelize } from "sequelize";
 /**
  * Enregistrer un nouvel événement
  * @param {Request} req
@@ -174,10 +175,24 @@ export const saveEvent = async (req, res) => {
         try {
           const events = await Event.findAll({
             where: {
-              created_by: userId
-            }
+              [Sequelize.Op.or]: [
+                { created_by: userId },
+                { '$Participants.user_id$': userId }
+              ]
+            },
+            include: [
+              {
+                model: Participant,
+                required: false,
+                where: {
+                  user_id: userId,
+                  status: "accepted"
+                },
+                attributes: ['user_id', 'invited_at', 'responded_at', 'status']
+              }
+            ]
           });
-          res.json(events);
+          res.status(200).json(events);
         } catch (error) {
           console.error('Erreur lors de la recherche des événements par utilisateur :', error);
           res.status(500).json({ message: 'Erreur interne du serveur' });
