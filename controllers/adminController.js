@@ -130,26 +130,26 @@ export const updateUserRole = async (req, res) => {
  * @param {Request} req
  * @param {Response} res
  */
+
 export const updateEvent = async (req, res) => {
- 
- 
   try {
-    const { event_id, description, date, time, capacity, is_private, title, location } = req.body;
- 
-    const event = await Event.findByPk(event_id);
+    const eventId = req.params.id;
+    const updateData = req.body;
+
+    const event = await Event.findByPk(eventId);
     if (!event) {
       return res.status(404).json({ message: 'Événement non trouvé' });
     }
- 
-    event.description = description;
-    event.date = date;
-    event.time = time;
-    event.capacity = capacity;
-    event.is_private = is_private;
-    event.title = title;
-    event.location = location;
+
+    // Mise à jour uniquement des champs fournis
+    for (const [key, value] of Object.entries(updateData)) {
+      if (event[key] !== undefined) {
+        event[key] = value;
+      }
+    }
+
     await event.save();
- 
+
     res.status(200).json({ message: 'Événement mis à jour avec succès' });
   } catch (error) {
     console.error('Erreur lors de la mise à jour de l\'événement:', error);
@@ -166,9 +166,9 @@ export const updateEvent = async (req, res) => {
 export const deleteEvent = async (req, res) => {
  
   try {
-    const { event_id } = req.body;
+    const eventId = req.params.id;
  
-    const event = await Event.findByPk(event_id);
+    const event = await Event.findByPk(eventId);
     if (!event) {
       return res.status(404).json({ message: 'Événement non trouvé' });
     }
