@@ -167,3 +167,26 @@ export const getUsernames = async (req, res) => {
       res.status(500).json({ message: 'Erreur interne du serveur' });
   }
 };
+
+/**
+ * Obtenir le rôle d'un utilisateur par son ID.
+ * @param {Request} req
+ * @param {Response} res
+ */
+export const getUserRole = async (req, res) => {
+  try {
+      const userId = req.params.id;
+      const user = await User.findByPk(userId, {
+          attributes: ['role']
+      });
+
+      if (!user) {
+          return res.status(404).json({ message: 'Utilisateur non trouvé' });
+      }
+
+      res.status(200).json({ role: user.role });
+  } catch (error) {
+      console.error('Erreur lors de la récupération du rôle utilisateur:', error);
+      res.status(500).json({ message: 'Erreur interne du serveur' });
+  }
+};
