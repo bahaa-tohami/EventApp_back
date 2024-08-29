@@ -136,7 +136,8 @@ export const saveEvent = async (req, res) => {
               {
                 model: Participant,
                 where: {
-                  user_id: userId
+                  user_id: userId,
+                  status: "invited"
                 },
                 attributes: ['participant_id', 'invited_at', 'responded_at', 'status']
               }

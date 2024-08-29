@@ -64,3 +64,28 @@ export const sendRemindersNotifications = async () => {
 
 };
 
+export const getNotificationsUser = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const notifications = await Notification.findAll({
+            where: {
+            user_id: id,
+            is_read: false
+        },
+        include: [
+            {
+                model: Event,
+                required: true,
+                attributes: ['title', 'date', 'location', 'created_by', 'event_id']
+            }                                  
+        ],
+               
+    });
+        res.json(notifications);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Erreur lors de la récupération des notifications' });
+    }
+};
+
+
