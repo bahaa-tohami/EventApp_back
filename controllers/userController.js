@@ -148,25 +148,26 @@ export const loginUser = async (req, res) => {
     }
   };
 
-  /**
- * Récupérer la liste des utilisateurs avec seulement leur nom d'utilisateur.
+/**
+ * Récupérer la liste des utilisateurs avec leur nom d'utilisateur et leur ID.
  * @param {Request} req
  * @param {Response} res
  */
 export const getUsernames = async (req, res) => {
-  try {
-      // Récupérer les utilisateurs avec seulement leur nom d'utilisateur
-      const users = await User.findAll({
-          attributes: ['username']
-      });
+    try {
+        // Récupérer les utilisateurs avec leur nom d'utilisateur et leur ID
+        const users = await User.findAll({
+            attributes: ['user_id', 'username'] // Inclure 'user_id' et 'username'
+        });
+  
+        // Retourner la liste des noms d'utilisateur et des IDs
+        res.status(200).json(users);
+    } catch (error) {
+        console.error('Erreur lors de la récupération des utilisateurs:', error);
+        res.status(500).json({ message: 'Erreur interne du serveur' });
+    }
+  };
 
-      // Retourner la liste des noms d'utilisateur
-      res.status(200).json(users);
-  } catch (error) {
-      console.error('Erreur lors de la récupération des utilisateurs:', error);
-      res.status(500).json({ message: 'Erreur interne du serveur' });
-  }
-};
 
 /**
  * Obtenir le rôle d'un utilisateur par son ID.
@@ -190,3 +191,4 @@ export const getUserRole = async (req, res) => {
       res.status(500).json({ message: 'Erreur interne du serveur' });
   }
 };
+
