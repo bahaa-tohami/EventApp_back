@@ -58,18 +58,22 @@ export const addComment = async (req, res) => {
  * @param {Request} req
  * @param {Response} res
  */
+
 export const inviteUser = async (req, res) => {
     try {
         const { user_id, event_id, participant_id } = req.body;
-        
+
+        console.log('Received user_id:', user_id);
+        console.log('Received event_id:', event_id);
+        console.log('Received participant_id:', participant_id);
+
         const tokenUserId = getUserIdFromToken(req);
-        if(tokenUserId != user_id) {
+        if (tokenUserId != user_id) {
             return res.json({ message: "Vous n'êtes pas autorisé à inviter des utilisateurs à cet événement" });
         }
 
         // Récupérer l'événement à partir de la base de données
         const event = await Event.findByPk(event_id);
-        
 
         if (!event) {
             return res.status(404).json({ message: 'Événement non trouvé' });
@@ -95,7 +99,17 @@ export const inviteUser = async (req, res) => {
         // Ajouter l'invité à l'événement
         const newParticipant = await Participant.create({ user_id: participant_id, event_id });
 
-         // Créer une notification dans la base de données
+        // Récupérer l'entrée créée pour vérifier participant_id
+        const participant = await Participant.findOne({
+            where: {
+                user_id: participant_id,
+                event_id: event_id
+            }
+        });
+
+        console.log('Participant ID:', participant.participant_id);
+
+        // Créer une notification dans la base de données
         const notificationMessage = `Vous avez été invité à l'événement: ${event.title}. Veuillez vérifier les détails et répondre.`;
 
         await Notification.create({
@@ -111,6 +125,7 @@ export const inviteUser = async (req, res) => {
         res.status(500).json({ message: 'Erreur interne du serveur' });
     }
 };
+
 
 
 export const invitationResponse = async (req, res) => {
