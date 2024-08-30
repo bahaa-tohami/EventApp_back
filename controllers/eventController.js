@@ -3,6 +3,7 @@ import { Participant } from "../models/GuestModel.js";
 import  { User } from "../models/UserModel.js"
 import { getUserIdFromToken } from "../utils/getUserIdFromToken.js";
 import { Sequelize } from "sequelize";
+import { Comment } from "../models/CommentModel.js";
 /**
  * Enregistrer un nouvel événement
  * @param {Request} req
