@@ -39,8 +39,9 @@ export const Participant = sequelize.define('Participant', {
   timestamps: false
 });
 
-User.hasMany(Participant, { foreignKey: 'user_id' });
-Participant.belongsTo(User, { foreignKey: 'user_id' });
+
+
+
 
 
 
