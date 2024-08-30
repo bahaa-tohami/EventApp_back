@@ -1,6 +1,8 @@
 import express from 'express';
 import { createUser, getUsernames, getUserProfile, getUserRole, loginUser, updateUserProfile } from '../controllers/userController.js';
 import { isLogged } from '../middlewares/auth.js';
+import { getUserById } from '../controllers/userController.js';
+
 
 
 const router = express.Router();
@@ -19,4 +21,6 @@ router.get('/users/:id/role', isLogged, getUserRole);
 
 // Route pour récupérer la liste des utilisateurs
 router.get('/usernames', getUsernames);
+router.get('/users/:id', getUserById);
+
 export default router;

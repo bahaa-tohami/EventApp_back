@@ -214,8 +214,22 @@ export const saveEvent = async (req, res) => {
                     {
                         model: Comment,
                      
-                        attributes: ['content', 'rating']
-                    }
+                        attributes: ['content', 'rating'],
+
+                        
+                        
+                    },
+        
+                    {
+                      model: Participant,
+                      attributes: ['user_id', 'invited_at', 'responded_at', 'status'],
+                      include: [
+                        {
+                            model: User,
+                            attributes: ['username', 'first_name', 'last_name'] // Inclure les informations de l'utilisateur
+                        }
+                    ]
+                  }
                 ]
             });
    

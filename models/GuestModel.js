@@ -1,6 +1,7 @@
 import sequelize from "../config/database.js";
 import { DataTypes } from "sequelize";
 import { Sequelize } from "sequelize";
+import { User } from "./UserModel.js";
 
 export const Participant = sequelize.define('Participant', {
   participant_id: {
@@ -37,5 +38,11 @@ export const Participant = sequelize.define('Participant', {
   tableName: 'Participants',
   timestamps: false
 });
+
+User.hasMany(Participant, { foreignKey: 'user_id' });
+Participant.belongsTo(User, { foreignKey: 'user_id' });
+
+
+
 
 
