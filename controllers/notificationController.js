@@ -79,7 +79,7 @@ export const getNotificationsUser = async (req, res) => {
                 attributes: ['title', 'date', 'location', 'created_by', 'event_id']
             }                                  
         ],
-               
+        order: [['created_at', 'DESC']]
     });
         res.json(notifications);
     } catch (error) {

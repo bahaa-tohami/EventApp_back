@@ -6,7 +6,7 @@ import { User } from '../models/UserModel.js';
 import { Notification } from '../models/NotificationModel.js';
 import { sendEmail } from '../utils/sendMail.js';
 import { getUserIdFromToken } from '../utils/getUserIdFromToken.js';
-
+import { Sequelize } from 'sequelize';
 
 /**
  * Ajouter un commentaire à un événement.
@@ -172,16 +172,24 @@ export const getInvitations = async (req, res) => {
     const { id } = req.params;
     const invitations = await Participant.findAll({
         where: {
-            user_id: id,
-            status: "invited"
+            [Sequelize.Op.or]: [
+                { user_id: id },
+                { '$Event.created_by$': id }
+            ]
         },
         include: [
             {
                 model: Event,
                 required: true,
                 attributes: ['title', 'date', 'location', 'created_by', 'event_id']
+            },
+            {
+                model: User,
+                required: true,
+                attributes: ['first_name', 'last_name', 'user_id']
             }
-        ]   
+        ],
+        order: [['invited_at', 'DESC']]
     });
     res.json(invitations);
 };

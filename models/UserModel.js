@@ -1,6 +1,7 @@
 import sequelize from "../config/database.js";
 import { DataTypes } from "sequelize";
-import { Comment } from './CommentModel.js'; // Importer le modèle Comment
+import { Comment } from './CommentModel.js'; 
+import { Participant } from './GuestModel.js';
 
 export const User = sequelize.define('User', {
   user_id: {
@@ -56,3 +57,6 @@ export const User = sequelize.define('User', {
 // Définir les relations après la définition du modèle
 User.hasMany(Comment, { foreignKey: 'user_id' });
 Comment.belongsTo(User, { foreignKey: 'user_id' });
+
+User.hasMany(Participant, { foreignKey: 'user_id' });
+Participant.belongsTo(User, { foreignKey: 'user_id' });
