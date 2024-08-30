@@ -214,7 +214,8 @@ export const saveEvent = async (req, res) => {
                     {
                         model: Comment,
                      
-                        attributes: ['content', 'rating']
+                        attributes: ['content', 'rating'],
+                        
                     }
                 ]
             });
