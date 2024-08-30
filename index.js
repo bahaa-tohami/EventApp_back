@@ -13,6 +13,8 @@ import { sendRemindersNotifications } from "./controllers/notificationController
 import cron from "node-cron";
 import notificationRoute from "./routes/notificationRoute.js";
 import { setupSocket } from "./socket/websocket.js";
+import http from "http";
+
 
 
 
@@ -58,8 +60,9 @@ sequelize.sync()
 cron.schedule('* */4 * * *', sendRemindersNotifications);
 
 //websocket
+const server = http.createServer(app);
 export const io = setupSocket(server);
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`Serveur sur: ${BASE_URL}`);
 });
