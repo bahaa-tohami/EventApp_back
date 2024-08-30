@@ -169,6 +169,22 @@ export const getUsernames = async (req, res) => {
   };
 
 
+export const getUserById = async (req, res) => {
+    try {
+        const userId = req.params.id;
+        // Récupérer les utilisateurs avec seulement leur nom d'utilisateur
+        const users = await User.findByPk(userId, {
+            attributes: ['username', 'first_name', 'last_name']
+        });
+  
+        // Retourner la liste des noms d'utilisateur
+        res.status(200).json(users);
+    } catch (error) {
+        console.error('Erreur lors de la récupération des utilisateurs:', error);
+        res.status(500).json({ message: 'Erreur interne du serveur' });
+    }
+  };
+
 /**
  * Obtenir le rôle d'un utilisateur par son ID.
  * @param {Request} req
