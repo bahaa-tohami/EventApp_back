@@ -153,3 +153,21 @@ export const invitationResponse = async (req, res) => {
     }
 };
 
+export const getInvitations = async (req, res) => {
+    const { id } = req.params;
+    const invitations = await Participant.findAll({
+        where: {
+            user_id: id,
+            status: "invited"
+        },
+        include: [
+            {
+                model: Event,
+                required: true,
+                attributes: ['title', 'date', 'location', 'created_by', 'event_id']
+            }
+        ]   
+    });
+    res.json(invitations);
+};
+

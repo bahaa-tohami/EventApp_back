@@ -11,6 +11,8 @@ import commentRoutes from "./routes/commentRoute.js"
 import adminRouter from "./routes/adminRoute.js";
 import { sendRemindersNotifications } from "./controllers/notificationController.js";
 import cron from "node-cron";
+import notificationRoute from "./routes/notificationRoute.js";
+
 
 
 
@@ -38,6 +40,7 @@ app.use("/", guestRouter)
 app.use("/event", eventRouter)
 app.use("/", commentRoutes)
 app.use("/", adminRouter)
+app.use("/", notificationRoute)
 
 
 

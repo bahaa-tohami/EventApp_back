@@ -3,6 +3,7 @@ import { Participant } from "../models/GuestModel.js";
 import  { User } from "../models/UserModel.js"
 import { getUserIdFromToken } from "../utils/getUserIdFromToken.js";
 import { Sequelize } from "sequelize";
+import { Comment } from "../models/CommentModel.js";
 /**
  * Enregistrer un nouvel événement
  * @param {Request} req
@@ -136,7 +137,8 @@ export const saveEvent = async (req, res) => {
               {
                 model: Participant,
                 where: {
-                  user_id: userId
+                  user_id: userId,
+                  status: "invited"
                 },
                 attributes: ['participant_id', 'invited_at', 'responded_at', 'status']
               }
