@@ -1,5 +1,6 @@
 import { User } from '../models/UserModel.js';
 import { Event } from '../models/EventModel.js';
+
 /**
  * Lister tous les utilisateurs.
  * @param {Request} req
@@ -182,4 +183,28 @@ export const deleteEvent = async (req, res) => {
   }
 };
 
+/**
+ * Lister tous les événements.
+ * @param {Request} req
+ * @param {Response} res
+ */
+export const listEvents = async (req, res) => {
+  try {
+    const events = await Event.findAll({
+      include: [
+        {
+          model: User,
+          attributes: ['username'],
+          where: {
+            deletedAt: null // Afin d'exclure de la liste les évènements supprimés
+          }
+        }
+      ]
+    });
+    res.status(200).json(events);
+  } catch (error) {
+    console.error('Erreur lors de la récupération des événements:', error);
+    res.status(500).json({ message: 'Erreur interne du serveur' });
+  }
+};
 
