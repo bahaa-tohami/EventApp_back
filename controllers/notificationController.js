@@ -69,8 +69,7 @@ export const getNotificationsUser = async (req, res) => {
     try {
         const notifications = await Notification.findAll({
             where: {
-            user_id: id,
-            is_read: false
+            user_id: id
         },
         include: [
             {
@@ -87,5 +86,17 @@ export const getNotificationsUser = async (req, res) => {
         res.status(500).json({ message: 'Erreur lors de la récupération des notifications' });
     }
 };
+export const updateNotification = async (req, res) => {
+    const { id } = req.params;
+    const { is_read } = req.body;
+    const notification = await Notification.findByPk(id);
+    if (!notification) {
+        return res.status(404).json({ message: 'Notification non trouvée' });
+    }
+    notification.is_read = is_read;
+    await notification.save();
+    res.json(notification);
+};
+
 
 

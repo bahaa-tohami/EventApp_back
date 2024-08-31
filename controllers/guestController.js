@@ -113,7 +113,7 @@ export const inviteUser = async (req, res) => {
         const notificationMessage = `Vous avez été invité à l'événement: ${event.title}. Veuillez vérifier les détails et répondre.`;
 
         await Notification.create({
-            user_id: user_id,
+            user_id: participant_id,
             event_id: event_id,
             message: notificationMessage,
             type: 'invitation'

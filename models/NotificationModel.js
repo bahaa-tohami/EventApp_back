@@ -4,6 +4,7 @@ import { Sequelize } from "sequelize";
 import { Event } from "./EventModel.js";
 import { User } from "./UserModel.js";
 import { sendEmail } from "../utils/sendMail.js";
+import { io } from "../index.js";
 
 export const Notification = sequelize.define('Notification', {
   notification_id: {
@@ -45,14 +46,15 @@ export const Notification = sequelize.define('Notification', {
   createdAt: 'created_at',
   updatedAt: false,
   hooks: {
-    beforeCreate: async (notification, options) => {
+    afterCreate: async (notification, options) => {
       try {
         const event = await Event.findByPk(notification.event_id);
         const user = await User.findByPk(notification.user_id);
         if (event && user) { 
           const emailSubject = `Nouvelle notification: ${notification.type}`;
           const emailText = `Bonjour ${user.username},\n\n${notification.message}\n\nMerci.`;
-          await sendEmail(user.email, emailSubject, emailText);
+          await sendEmail(user.email, emailSubject, emailText); // Envoie un email à l'utilisateur
+          io.emit('newNotification', notification); // Envoie une notification en temps réel
         } 
       } catch (error) {
         console.error('Erreur lors de la création de la notification:', error);
