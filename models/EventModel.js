@@ -5,6 +5,7 @@ import { Comment } from './CommentModel.js'; // Importer le modèle Comment
 import { User } from './UserModel.js';
 import { Participant } from './GuestModel.js';
 import { Notification } from './NotificationModel.js';
+import { sendEmail } from "../utils/sendMail.js";
 
 export const Event = sequelize.define('Event', {
     event_id: {
@@ -58,26 +59,36 @@ export const Event = sequelize.define('Event', {
     updatedAt: 'updated_at',
     paranoid: true,
     hooks: {
-        beforeUpdate: async (event, options) => {
-                console.log("hook entry")
-                const Participants = await Participant.findAll({ where: { event_id: event.event_id , status: "accepted" } });
-                console.log("Pariticipant dans la base");
-                console.log(Participants);
-                if (Participants.length > 0) {
-                    console.log(Participants);
-                    for (const participant of Participants) {
-                        const user = User.findByPk(participant.user_id);
-                        const message = `L'evenement: ${event.title} a été modifié`;
-                        const notification = new Notification({
-                            user_id: participant.user_id,
-                            event_id: event.event_id,
-                            type: 'update',
-                            message: message
-                        });
-                        await notification.save();
-                    
+        afterUpdate: async (event, options) => {
+            console.log("hook entry")
+            const Participants = await Participant.findAll({ where: { event_id: event.event_id, status: "accepted" } });
+            console.log("Pariticipant dans la base");
+            Participants.forEach(async (participant) => {
+                const user = await User.findByPk(participant.user_id);
+                const message = `L'evenement: ${event.title} a été modifié`;
+                const notification = new Notification({
+                    user_id: participant.user_id,
+                    event_id: event.event_id,
+                    type: 'update',
+                    message: message
+                });
+                const emailSubject = `Nouvelle notification: ${notification.type}`;
+                const emailText = `
+                    <html>
+                    <body>
+                        <h1>Nouvelle notification</h1>
+                        <p>Bonjour ${user.username},</p>
+                        <p>${notification.message}</p>
+                        <p>Merci.</p>
+                        <a href="${process.env.FRONTEND_URL}/">Accéder à l'application</a>
+                    </body>
+                    </html>
+                 `;
+                if(user && user.email) {
+                    await sendEmail(user.email, emailSubject, emailText);
+                    await notification.save();
                 }
-                }
+            });
         }
     }
 });

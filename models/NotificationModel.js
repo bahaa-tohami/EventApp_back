@@ -52,7 +52,17 @@ export const Notification = sequelize.define('Notification', {
         const user = await User.findByPk(notification.user_id);
         if (event && user) { 
           const emailSubject = `Nouvelle notification: ${notification.type}`;
-          const emailText = `Bonjour ${user.username},\n\n${notification.message}\n\nMerci.`;
+          const emailText = `
+            <html>
+              <body>
+                <h1>Nouvelle notification</h1>
+                <p>Bonjour ${user.username},</p>
+                <p>${notification.message}</p>
+                <p>Merci.</p>
+                <a href="${process.env.FRONTEND_URL}/">Accéder à l'application</a>
+              </body>
+            </html>
+          `;
           await sendEmail(user.email, emailSubject, emailText); // Envoie un email à l'utilisateur
           io.emit('newNotification', notification); // Envoie une notification en temps réel
         } 
