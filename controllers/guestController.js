@@ -181,12 +181,19 @@ export const getInvitations = async (req, res) => {
             {
                 model: Event,
                 required: true,
-                attributes: ['title', 'date', 'location', 'created_by', 'event_id']
+                attributes: ['title', 'date', 'location', 'created_by', 'event_id'],
+                include: [
+                    {
+                        model: User,
+                        required: true,
+                        attributes: ['username', 'user_id']
+                    }
+                ]
             },
             {
                 model: User,
                 required: true,
-                attributes: ['first_name', 'last_name', 'user_id']
+                attributes: ['username', 'user_id']
             }
         ],
         order: [['invited_at', 'DESC']]
