@@ -57,7 +57,7 @@ sequelize.sync()
   });
 
 //Cron pour envoyer les notifications toutes les 4 heures
-cron.schedule('* */4 * * *', sendRemindersNotifications);
+//cron.schedule('* */4 * * *', sendRemindersNotifications);
 
 //websocket
 const server = http.createServer(app);
