@@ -3,7 +3,6 @@ import bcrypt from 'bcrypt';
 import { Op } from 'sequelize';
 import jwt from 'jsonwebtoken';
 import { getUserIdFromToken } from '../utils/getUserIdFromToken.js';
-import { sendEmail } from '../utils/sendMail.js';
 /**
  * Obtenir le profil d'un utilisateur par son ID.
  * @param {Request} req
@@ -102,31 +101,6 @@ export const createUser = async (req, res) => {
         userData.password_hash = hashedPassword;
         // Créer un nouvel utilisateur avec les données fournies
         const newUser = await User.create(userData);
-        const activationToken = jwt.sign({ email: newUser.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
-        const mailOptions = {
-            subject: 'Activation de votre compte',
-            text: `Bonjour ${newUser.username}, bienvenue sur notre plateforme, 
-            veuillez activer votre compte en cliquant sur le lien suivant:
-            http://localhost:3000/activate/${activationToken}`
-        };
-        
-        const htmlContent = `
-        <html>
-            <body>
-                <h1>Activation de votre compte</h1>
-                <p>Bonjour ${newUser.username},</p>
-                <p>Bienvenue sur notre plateforme,</p>
-                <p>Veuillez activer votre compte en cliquant sur le lien suivant:</p>
-                <a href="http://localhost:3000/activation/${activationToken}">Activer mon compte</a>
-            </body>
-        </html>
-        `;
-
-        await sendEmail(newUser.email, mailOptions.subject, htmlContent);
-
-        
-
 
         res.status(201).json({ message: 'Utilisateur créé avec succès', user: newUser });
     } catch (error) {
@@ -231,25 +205,6 @@ export const getUserRole = async (req, res) => {
   } catch (error) {
       console.error('Erreur lors de la récupération du rôle utilisateur:', error);
       res.status(500).json({ message: 'Erreur interne du serveur' });
-  }
-};
-
-export const activateUserAccount = async (req, res) => {
-  try {
-    const { token } = req.params;
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(decoded);
-    const userEmail = decoded.email;
-    const user = await User.findOne({ where: { email: userEmail } });
-    if (!user) {
-      return res.status(404).json({ message: 'Utilisateur non trouvé' });
-    }
-    user.status = 'active';
-    await user.save();
-    res.status(200).json({ message: 'Compte utilisateur activé avec succès', user });
-  } catch (error) {
-    console.error('Erreur lors de l\'activation du compte utilisateur:', error);
-    res.status(500).json({ message: 'Erreur interne du serveur' });
   }
 };
 

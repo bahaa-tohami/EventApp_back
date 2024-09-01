@@ -2,8 +2,6 @@ import express from 'express';
 import { createUser, getUsernames, getUserProfile, getUserRole, loginUser, updateUserProfile } from '../controllers/userController.js';
 import { isLogged } from '../middlewares/auth.js';
 import { getUserById } from '../controllers/userController.js';
-import { activateUserAccount } from '../controllers/userController.js';
-
 
 
 
@@ -24,7 +22,5 @@ router.get('/users/:id/role', isLogged, getUserRole);
 // Route pour récupérer la liste des utilisateurs
 router.get('/usernames', getUsernames);
 router.get('/users/:id', getUserById);
-// Route pour activer le compte utilisateur à l'inscription
-router.get('/activate-account/:token', activateUserAccount);
 
 export default router;
