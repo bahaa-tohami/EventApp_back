@@ -2,8 +2,8 @@ import nodemailer from "nodemailer";
 
 // Configurer le transporteur Nodemailer avec Mailtrap
 const transport = nodemailer.createTransport({
-    host: process.env.HOST_EMAIL,
-    port: process.env.PORT_EMAIL,
+    host: "sandbox.smtp.mailtrap.io",
+    port: 2525,
     auth: {
       user: process.env.MAILTRAP_USER,
       pass: process.env.MAILTRAP_PASS
@@ -17,13 +17,13 @@ const transport = nodemailer.createTransport({
  * @param {string} text 
  * @returns {Promise<void>}
  */  
-export const sendEmail = async (to, subject, htmlContent) => {
+export const sendEmail = async (to, subject, text) => {
     try {
       await transport.sendMail({
         from: '"Event Management" <no-reply@eventmanagement.com>', // expéditeur
         to: to, // destinataire
         subject: subject, // sujet
-        html: htmlContent, // contenu du message
+        text: text, // contenu du message
       });
       console.log('E-mail envoyé avec succès à', to);
     } catch (error) {
